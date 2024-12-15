@@ -5,9 +5,9 @@ from datetime import datetime
 import csv
 import pandas as pd
 
-FILE_NAME = "nhanvien.csv"
+file_name= "nhanvien.csv"
 try:
-    with open(FILE_NAME, "x", newline="", encoding="utf-8") as file:
+    with open(file_name, "x", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(["Mã", "Tên", "Đơn vị", "Chức danh", "Ngày sinh", "Số CMND", "Nơi cấp", "Ngày cấp"])
 except FileExistsError:
@@ -19,9 +19,9 @@ def save_data():
         ngaysinh_entry.get(), cmnd_entry.get(), noicap_entry.get(), ngaycap_entry.get()
     ]
     if "" in data:
-        messagebox.showerror("Lỗi", "Vui lòng nhập đầy đủ thông tin!")
+        messagebox.showerror("Lỗi", "Vui lòng nhập đầy đủ thông tin")
         return
-    with open(FILE_NAME, "a", newline="", encoding="utf-8") as file:
+    with open(file_name, "a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(data)
     messagebox.showinfo("Thành công", "Dữ liệu đã được lưu!")
@@ -34,7 +34,7 @@ def clear_entries():
 def show_birthdays_today():
     today = datetime.now().strftime("%d/%m/%Y")[:5]  
     birthdays = []
-    with open(FILE_NAME, "r", encoding="utf-8") as file:
+    with open(file_name, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row["Ngày sinh"][:5] == today:
@@ -45,14 +45,12 @@ def show_birthdays_today():
     else:
         messagebox.showinfo("Sinh nhật hôm nay", "Không có nhân viên nào sinh nhật hôm nay.")
 
-
 def export_to_excel():
-    df = pd.read_csv(FILE_NAME)
+    df = pd.read_csv(file_name)
     df['Ngày sinh'] = pd.to_datetime(df['Ngày sinh'], format="%d/%m/%Y", errors='coerce')
     df = df.sort_values(by='Ngày sinh', ascending=True)
     df.to_excel("danhsach_nhanvien.xlsx", index=False)
     messagebox.showinfo("Thành công", "Danh sách đã được xuất ra file Excel: danhsach_nhanvien.xlsx")
-
 
 root = tk.Tk()
 root.title("Quản lý thông tin nhân viên")
